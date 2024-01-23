@@ -1,0 +1,87 @@
+<script>
+import { useUserStore } from '@/stores/user'
+import { mapWritableState } from 'pinia'
+import axios from 'axios'
+import Loading from '@/components/Loading.vue'
+
+export default {
+  name: 'LogInPage',
+  data() {
+    return {
+      loginSchema: {
+        username: 'required|email',
+        password: 'required|min:9|max:100|excluded:password'
+      },
+      url: 'https://vue3-course-api.hexschool.io/v2',
+      enableLoading: false
+    }
+  },
+  components: {
+    Loading
+  },
+  computed: {
+    ...mapWritableState(useUserStore, ['userLoggedIn'])
+  },
+
+  methods: {
+    async login(values) {
+      try {
+        this.enableLoading = true
+        let response = await axios.post(`${this.url}/admin/signin`, values)
+        const { message, token, expired } = response.data
+        alert(message)
+        document.cookie = `myToken=${token}; expires=${new Date(expired)};SameSite=None;secure `
+        this.userLoggedIn = true
+        alert('登入成功')
+        this.enableLoading = false
+        this.$router.push('/')
+      } catch (error) {
+        console.dir('error => ', error)
+        return
+      }
+    }
+  }
+}
+</script>
+
+<template>
+  <Loading v-bind:isActive="enableLoading" />
+  <div class="container">
+    <div class="row justify-content-center py-3">
+      <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
+      <div class="col-8">
+        <vee-form
+          id="form"
+          class="form-signin"
+          :validation-schema="loginSchema"
+          v-on:submit="login"
+        >
+          <div class="form-floating mb-3">
+            <vee-field
+              name="username"
+              type="email"
+              class="form-control"
+              placeholder="name@example.com"
+            />
+            <label for="username">Email address</label>
+            <ErrorMessage class="text-danger" name="username" />
+          </div>
+          <div class="form-floating">
+            <vee-field
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="Password"
+            />
+            <label for="password">Password</label>
+            <ErrorMessage class="text-danger" name="password" />
+          </div>
+          <button class="btn btn-lg btn-primary w-100 mt-3" type="submit">登入</button>
+        </vee-form>
+      </div>
+    </div>
+    <p class="mt-5 mb-3 text-muted">&copy; 2021~∞ - 六角學院</p>
+  </div>
+</template>
+
+<style lang="scss"></style>
