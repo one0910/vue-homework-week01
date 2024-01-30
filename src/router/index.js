@@ -1,5 +1,6 @@
 import LogInVue from '@/views/LogIn.vue'
 import ProductVue from '@/views/Product.vue'
+import ProductManageVue from '@/views/ProductManage.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
@@ -19,6 +20,14 @@ const routes = [
     // },
   },
   {
+    name: 'productManage',
+    path: '/product_manage',
+    component: ProductManageVue,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     name: 'login',
     path: '/login',
     component: LogInVue,
@@ -35,25 +44,23 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: routes
+  routes: routes,
+  linkExactActiveClass: 'activeLink'
 })
 
-// router.beforeEach((to, from, next) => {
-//   const store = useUserStore()
-//   const UserLoggedIn = store.userLoggedIn;
-//   console.log('from => ', from)
-//   console.log('to => ', to)
-//   console.log('next => ', next)
-//   // 如果用戶已登錄且嘗試訪問登錄頁面，則重定向到產品頁面
-//   if (UserLoggedIn && to.path === 'login') {
-//     next({ name: 'product' });
-//     return;
-//   }
-
-
-//   // 在其他情況下，正常進行導航
-//   next();
-
-// })
+router.beforeEach((to, form, next) => {
+  // 2. 一般情形下沒有meta資料也可以進入該路由的頁面
+  if (to.meta.requiresAuth) {
+    const store = useUserStore()
+    if (store.userLoggedIn) {
+      next()
+    } else {
+      next({ path: '/', })
+    }
+    return;
+  } else {
+    next();
+  }
+})
 
 export default router

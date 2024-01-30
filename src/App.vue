@@ -21,6 +21,8 @@ export default {
     const myToken = document.cookie.replace(/(?:(?:^|.*;\s*)myToken\s*\=\s*([^;]*).*$)|^.*$/, '$1')
     if (myToken) {
       this.authenticate(myToken)
+    } else {
+      this.isLoading = false
     }
   }
 }
@@ -30,3 +32,5 @@ export default {
   <AppHeader />
   <router-view></router-view>
 </template>
+
+<style lang="scss"></style>

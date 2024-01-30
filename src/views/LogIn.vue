@@ -1,7 +1,6 @@
 <script>
 import { useUserStore } from '@/stores/user'
 import { mapWritableState } from 'pinia'
-import axios from 'axios'
 import Loading from '@/components/Loading.vue'
 
 export default {
@@ -10,7 +9,7 @@ export default {
     return {
       loginSchema: {
         username: 'required|email',
-        password: 'required|min:9|max:100|excluded:password'
+        password: 'required|min:4|max:100|excluded:password'
       },
       url: 'https://vue3-course-api.hexschool.io/v2',
       enableLoading: false
@@ -27,12 +26,14 @@ export default {
     async login(values) {
       try {
         this.enableLoading = true
-        let response = await axios.post(`${this.url}/admin/signin`, values)
+        let response = await this.$http.post(
+          `${import.meta.env.VITE_APP_BASE_URL}/admin/signin`,
+          values
+        )
         const { message, token, expired } = response.data
-        alert(message)
-        document.cookie = `myToken=${token}; expires=${new Date(expired)};SameSite=None;secure `
+        document.cookie = `myToken=${token}; expires=${new Date(expired)};`
         this.userLoggedIn = true
-        alert('登入成功')
+        alert(message)
         this.enableLoading = false
         this.$router.push('/')
       } catch (error) {
@@ -45,7 +46,7 @@ export default {
 </script>
 
 <template>
-  <Loading v-bind:isActive="enableLoading" />
+  <Loading :isActive="enableLoading" />
   <div class="container">
     <div class="row justify-content-center py-3">
       <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
@@ -76,7 +77,10 @@ export default {
             <label for="password">Password</label>
             <ErrorMessage class="text-danger" name="password" />
           </div>
-          <button class="btn btn-lg btn-primary w-100 mt-3" type="submit">登入</button>
+          <button class="btn btn-lg btn-primary w-100 mt-3 mb-2" type="submit">登入</button>
+          <span class="text-black-50 fst-italic">測試登入帳號: test1234_test1234@gmail.com</span>
+          <br />
+          <span class="text-black-50 fst-italic">測試登入密碼: test123456789</span>
         </vee-form>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <script>
 import { useUserStore } from '@/stores/user'
-import { mapStores, mapState } from 'pinia'
+import { mapStores, mapState, mapActions } from 'pinia'
 import Loading from './Loading.vue'
 
 export default {
@@ -10,13 +10,23 @@ export default {
   },
   computed: {
     ...mapStores(useUserStore),
-    ...mapState(useUserStore, ['userLoggedIn'])
+    ...mapState(useUserStore, ['userLoggedIn', 'isLoading'])
   },
   methods: {
     handleLogin() {
       if (this.userLoggedIn) {
+        /*當this.userLoggedIn=true時, 表示現在的狀態是登入狀態，但header顯示的是登出
+          因此這裡的要處理的是登出的邏輯
+        */
         this.userStore.signOut()
+        /*當目前頁面是處在需要登入才能看到的畫面時(透過meta來判定)，當執行登出邏輯時，則轉跳到首頁*/
+        if (this.$route.meta.requiresAuth) {
+          this.$router.push({ path: '/' })
+        }
       } else {
+        /*相反的當this.userLoggedIn=false時, 表示現在的狀態是登出狀態，header則顯示的是登入
+          因此這裡的要處理的是登入的邏輯，跳到登入頁面
+        */
         this.$router.push('/login')
       }
     }
@@ -25,22 +35,49 @@ export default {
 </script>
 
 <template>
-  <Loading />
-  <nav class="navbar navbar-light bg-light border">
+  <Loading :isActive="isLoading" />
+  <!-- <nav class="navbar navbar-light bg-light border"> -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">
+      <router-link class="navbar-brand" href="#" :to="{ name: 'product' }">
         <img
           src="/bootstrap-logo.svg"
           alt=""
           width="30"
           height="24"
           class="d-inline-block align-text-top"
+          @click="$router.push('/')"
         />
-        Header
-      </a>
-      <a href="#" @click.prevent="handleLogin" v-show="!$route.meta.isLoginPage">
-        {{ `${userLoggedIn ? '登出' : '登入'}` }}
-      </a>
+        Home
+      </router-link>
+      <div class="navbar-collapse">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a
+              href="#"
+              class="nav-link"
+              @click.prevent="handleLogin"
+              v-show="!$route.meta.isLoginPage"
+            >
+              {{ `${userLoggedIn ? '登出' : '登入'}` }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <router-link
+              v-show="userLoggedIn"
+              href="#"
+              class="nav-link"
+              @click.prevent="$router.push('/product_manage')"
+              :to="{ name: 'productManage' }"
+              >產品管理
+            </router-link>
+          </li>
+        </ul>
+        <!-- <a href="#" @click.prevent="handleLogin" v-show="!$route.meta.isLoginPage">
+          {{ `${userLoggedIn ? '登出' : '登入'}` }}
+        </a>
+        <a href="#" @click.prevent="$router.push('/product_manage')">產品管理</a> -->
+      </div>
     </div>
   </nav>
 </template>

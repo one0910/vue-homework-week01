@@ -10,3 +10,7 @@ img {
 .images {
   height: 150px;
 }
+
+.activeLink {
+  color: #0d6efd !important;
+}
