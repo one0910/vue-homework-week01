@@ -1,16 +1,16 @@
 <script>
-import { useUserStore } from '@/stores/user'
-import { mapStores, mapState, mapActions } from 'pinia'
-import Loading from './Loading.vue'
+import { useUserStore } from '@/stores/user';
+import { mapStores, mapState } from 'pinia';
+import Loading from './Loading.vue';
 
 export default {
   name: 'AppHeader',
   components: {
-    Loading
+    Loading,
   },
   computed: {
     ...mapStores(useUserStore),
-    ...mapState(useUserStore, ['userLoggedIn', 'isLoading'])
+    ...mapState(useUserStore, ['userLoggedIn', 'isLoading']),
   },
   methods: {
     handleLogin() {
@@ -18,20 +18,21 @@ export default {
         /*當this.userLoggedIn=true時, 表示現在的狀態是登入狀態，但header顯示的是登出
           因此這裡的要處理的是登出的邏輯
         */
-        this.userStore.signOut()
+        this.userStore.signOut();
         /*當目前頁面是處在需要登入才能看到的畫面時(透過meta來判定)，當執行登出邏輯時，則轉跳到首頁*/
         if (this.$route.meta.requiresAuth) {
-          this.$router.push({ path: '/' })
+          this.$router.push({ path: '/' });
         }
       } else {
         /*相反的當this.userLoggedIn=false時, 表示現在的狀態是登出狀態，header則顯示的是登入
           因此這裡的要處理的是登入的邏輯，跳到登入頁面
         */
-        this.$router.push('/login')
+        this.userStore.errorMessage = '';
+        this.$router.push('/login');
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <template>
@@ -53,12 +54,7 @@ export default {
       <div class="navbar-collapse">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a
-              href="#"
-              class="nav-link"
-              @click.prevent="handleLogin"
-              v-show="!$route.meta.isLoginPage"
-            >
+            <a href="#" class="nav-link" @click.prevent="handleLogin" v-show="!$route.meta.isLoginPage">
               {{ `${userLoggedIn ? '登出' : '登入'}` }}
             </a>
           </li>

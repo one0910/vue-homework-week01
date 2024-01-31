@@ -1,32 +1,54 @@
 <script>
-import bootstrap from 'bootstrap/dist/js/bootstrap.js'
+import bootstrap from 'bootstrap/dist/js/bootstrap.js';
+import StarRating from 'vue-star-rating';
+import Loading from './Loading.vue';
 export default {
   data() {
     return {
-      modal: {}
-    }
+      isLoading: false,
+    };
   },
   props: ['editData'],
   emits: ['confirmEditData'],
+  components: {
+    StarRating,
+    Loading,
+  },
   methods: {
     showModal() {
-      this.modal.show()
+      this.modal.show();
     },
     hideModal() {
-      this.modal.hide()
+      this.modal.hide();
     },
-    confirmEdit() {
-      this.$emit('confirmEditData', { ...this.$props.editData, edit: true })
-      this.hideModal()
-    }
+    async confirmEdit() {
+      this.isLoading = true;
+      this.$emit('confirmEditData', { ...this.$props.editData, edit: true });
+      const url = `${import.meta.env.VITE_APP_BASE_URL}/api/japanbread/admin/product`;
+      const productId = this.$props.editData.id;
+      try {
+        let response = await this.$http.put(`${url}/${productId}`, {
+          data: {
+            ...this.$props.editData,
+          },
+        });
+        alert(`${response.data.message}`);
+        this.isLoading = false;
+      } catch (error) {
+        alert(`${error.response.data.message}`);
+        this.isLoading = false;
+      }
+      this.hideModal();
+    },
   },
   mounted() {
-    this.modal = new bootstrap.Modal(this.$refs.editProductModal)
-  }
-}
+    this.modal = new bootstrap.Modal(this.$refs.editProductModal);
+  },
+};
 </script>
 
 <template>
+  <Loading :isActive="isLoading" />
   <div
     id="editProductModal"
     ref="editProductModal"
@@ -41,12 +63,7 @@ export default {
           <h5 id="editProductModalLabel" class="modal-title">
             <span>編輯產品</span>
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="row">
@@ -104,7 +121,6 @@ export default {
                   />
                 </div>
               </div>
-
               <div class="row">
                 <div class="mb-3 col-md-6">
                   <label for="origin_price" class="form-label">原價</label>
@@ -154,6 +170,17 @@ export default {
                 </textarea>
               </div>
               <div class="mb-3">
+                <label for="content" class="form-label">產品評價</label>
+                <StarRating
+                  v-model:rating="$props.editData.rating"
+                  :star-size="18"
+                  :rounded-corners="true"
+                  :border-width="3"
+                  :padding="2"
+                />
+              </div>
+              <hr />
+              <div class="mb-3">
                 <div class="form-check">
                   <input
                     id="is_enabled"
@@ -170,9 +197,7 @@ export default {
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            取消
-          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
           <button type="button" class="btn btn-primary" @click="confirmEdit()">確認</button>
         </div>
       </div>

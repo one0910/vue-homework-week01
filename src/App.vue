@@ -1,31 +1,30 @@
 <script>
-import AppHeader from './components/Header.vue'
-import { useUserStore } from './stores/user'
-import { mapActions, mapWritableState } from 'pinia'
+import AppHeader from './components/Header.vue';
+import { mapActions, mapWritableState } from 'pinia';
+import { useUserStore } from './stores/user';
 
 export default {
-  name: 'app',
   data() {
-    return {}
+    return {};
   },
   components: {
-    AppHeader
+    AppHeader,
   },
   computed: {
-    ...mapWritableState(useUserStore, ['isLoading'])
+    ...mapWritableState(useUserStore, ['isLoading']),
   },
   methods: {
-    ...mapActions(useUserStore, ['authenticate'])
+    ...mapActions(useUserStore, ['authenticate']),
   },
   created() {
-    const myToken = document.cookie.replace(/(?:(?:^|.*;\s*)myToken\s*\=\s*([^;]*).*$)|^.*$/, '$1')
+    const myToken = document.cookie.replace(/(?:(?:^|.*;\s*)myToken\s*\=\s*([^;]*).*$)|^.*$/, '$1');
     if (myToken) {
-      this.authenticate(myToken)
+      this.authenticate(myToken);
     } else {
-      this.isLoading = false
+      this.isLoading = false;
     }
-  }
-}
+  },
+};
 </script>
 
 <template>
@@ -33,4 +32,4 @@ export default {
   <router-view></router-view>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

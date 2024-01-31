@@ -1,7 +1,8 @@
 <script>
-import CreateProductModal from '@/components/CreateProductModal.vue'
-import DelProductModal from '@/components/DelProductModal.vue'
-import EditProductModal from '@/components/EditProductModal.vue'
+import CreateProductModal from '@/components/CreateProductModal.vue';
+import DelProductModal from '@/components/DelProductModal.vue';
+import EditProductModal from '@/components/EditProductModal.vue';
+import StarRating from 'vue-star-rating';
 export default {
   data() {
     return {
@@ -18,14 +19,15 @@ export default {
             'https://i.imgur.com/EohsVnN.jpg',
             'https://i.imgur.com/p6nelV5.jpg',
             'https://i.imgur.com/bxYeOqZ.jpg',
-            ''
+            '',
           ],
           is_enabled: 1,
           origin_price: 300,
           price: 234,
           title: '南瓜核桃麵包',
           unit: '2',
-          num: 1
+          num: 1,
+          rating: 5,
         },
         {
           category: '冷凍麵包',
@@ -39,14 +41,15 @@ export default {
             'https://i.imgur.com/kGpeK8D.jpg',
             'https://i.imgur.com/CVzHGkN.jpg',
             'https://i.imgur.com/G6dY0pp.jpg',
-            'https://i.imgur.com/BnFBUYu.jpg'
+            'https://i.imgur.com/BnFBUYu.jpg',
           ],
           is_enabled: 1,
           origin_price: 300,
           price: 234,
           title: '咖啡巧克力麵包',
           unit: '2',
-          num: 2
+          num: 2,
+          rating: 4,
         },
         {
           category: '冷凍麵包',
@@ -60,14 +63,15 @@ export default {
             'https://i.imgur.com/76Vn0nw.jpg',
             'https://i.imgur.com/NNjLI4K.jpg',
             'https://i.imgur.com/h10qBYU.jpg',
-            'https://i.imgur.com/y14r6lH.jpg'
+            'https://i.imgur.com/y14r6lH.jpg',
           ],
           is_enabled: 1,
           origin_price: 300,
           price: 234,
           title: '牛奶麵包',
           unit: '2',
-          num: 3
+          num: 3,
+          rating: 3,
         },
         {
           category: '冷凍麵包',
@@ -81,14 +85,15 @@ export default {
             'https://i.imgur.com/s6vmJBI.jpg',
             'https://i.imgur.com/10fxeDp.jpg',
             'https://i.imgur.com/eIa7poh.jpg',
-            'https://i.imgur.com/jMXYkGk.jpg'
+            'https://i.imgur.com/jMXYkGk.jpg',
           ],
           is_enabled: 1,
           origin_price: 958,
           price: 1200,
           title: '桐生酵母全麥麵包',
           unit: '8',
-          num: 4
+          num: 4,
+          rating: 2,
         },
         {
           category: '冷凍麵包',
@@ -102,14 +107,15 @@ export default {
             'https://i.imgur.com/gwIpwQa.jpg',
             'https://i.imgur.com/z2UQioA.jpg',
             'https://i.imgur.com/ZNCyI7S.jpg',
-            'https://i.imgur.com/oOkvSAq.jpg'
+            'https://i.imgur.com/oOkvSAq.jpg',
           ],
           is_enabled: 1,
           origin_price: 500,
           price: 384,
           title: '小米麵包',
           unit: '4',
-          num: 5
+          num: 5,
+          rating: 1,
         },
         {
           category: '冷凍麵包',
@@ -123,14 +129,15 @@ export default {
             'https://i.imgur.com/U8NMuQU.jpg',
             'https://i.imgur.com/U7fRP8N.jpg',
             'https://i.imgur.com/xSLQNkw.jpg',
-            'https://i.imgur.com/bjKw0QB.jpg'
+            'https://i.imgur.com/bjKw0QB.jpg',
           ],
           is_enabled: 1,
           origin_price: 551,
           price: 700,
           title: '栗子核桃小麵包',
           unit: '4',
-          num: 6
+          num: 6,
+          rating: 2,
         },
         {
           category: '冷凍麵包',
@@ -144,14 +151,15 @@ export default {
             'https://i.imgur.com/kGnMU8V.jpg',
             'https://i.imgur.com/4hw0Hgu.jpg',
             'https://i.imgur.com/k1ZqIIc.jpg',
-            'https://i.imgur.com/tVD33Xi.jpg'
+            'https://i.imgur.com/tVD33Xi.jpg',
           ],
           is_enabled: 1,
           origin_price: 211,
           price: 399,
           title: '蜂蜜豆奶麵包',
           unit: '2',
-          num: 7
+          num: 7,
+          rating: 3,
         },
         {
           category: '冷凍麵包',
@@ -165,44 +173,46 @@ export default {
             'https://i.imgur.com/kw1KVLf.jpg',
             'https://i.imgur.com/PkgnKMP.jpg',
             'https://i.imgur.com/qAHDiCh.jpg',
-            'https://i.imgur.com/MwENfjI.jpg'
+            'https://i.imgur.com/MwENfjI.jpg',
           ],
           is_enabled: 1,
           origin_price: 400,
           price: 229,
           title: '國產小麥麵包',
           unit: '2',
-          num: 8
-        }
+          num: 8,
+          rating: 4,
+        },
       ],
       pagination: {
         total_pages: 1,
         current_page: 1,
         has_pre: false,
         has_next: false,
-        category: ''
+        category: '',
       },
       deleteData: {},
-      editData: {}
-    }
+      editData: {},
+    };
   },
   components: {
     CreateProductModal,
     EditProductModal,
-    DelProductModal
+    DelProductModal,
+    StarRating,
   },
   computed: {
     reversedProducts() {
-      return [...this.products].reverse()
-    }
+      return [...this.products].reverse();
+    },
   },
   methods: {
     async getProducts() {
-      const api = `${import.meta.env.VITE_APP_BASE_URL}`
+      const api = `${import.meta.env.VITE_APP_BASE_URL}`;
       try {
-        let response = await this.$http.get(`${import.meta.env.VITE_APP_BASE_URL}/admin/signin`)
+        let response = await this.$http.get(`${api}/admin/signin`);
       } catch (error) {
-        console.log(' error=> ', error)
+        console.log(' error=> ', error);
       }
     },
     updateProduct(newProdcut) {
@@ -211,52 +221,50 @@ export default {
       */
       if (newProdcut.edit) {
         const index = this.products.findIndex((item) => {
-          return item.id === newProdcut.id
-        })
-        delete newProdcut.edit
-        this.products[index] = { ...newProdcut }
-        this.editData = {}
+          return item.id === newProdcut.id;
+        });
+        delete newProdcut.edit;
+        this.products[index] = { ...newProdcut };
+        this.editData = {};
       } else {
-        this.products.push(newProdcut)
+        this.products.push(newProdcut);
       }
     },
     openDelModal(id, title) {
-      this.$refs.delProductModal.showModal()
+      this.$refs.delProductModal.showModal();
       const index = this.products.findIndex((item) => {
-        return item.id === id
-      })
-      this.deleteData = { id, index, title }
+        return item.id === id;
+      });
+      this.deleteData = { id, index, title };
     },
     openEditModal(id) {
-      this.$refs.editProductModal.showModal()
+      this.$refs.editProductModal.showModal();
       const index = this.products.findIndex((item) => {
-        return item.id === id
-      })
+        return item.id === id;
+      });
       this.products.forEach((item) => {
         if (item.id === id) {
-          this.editData = JSON.parse(JSON.stringify(item))
+          this.editData = JSON.parse(JSON.stringify(item));
         }
-      })
+      });
     },
     deleteProduct(confirmDeleteData) {
       const index = this.products.findIndex((item) => {
-        return item.id === confirmDeleteData.id
-      })
+        return item.id === confirmDeleteData.id;
+      });
       if (index !== -1) {
-        this.products.splice(confirmDeleteData.index, 1)
+        this.products.splice(confirmDeleteData.index, 1);
       }
-    }
+    },
   },
-  mounted() {}
-}
+  mounted() {},
+};
 </script>
 
 <template>
   <div class="container">
     <div class="text-end mt-4">
-      <button class="btn btn-primary" @click="$refs.createProductModal.showModal()">
-        建立新的產品
-      </button>
+      <button class="btn btn-primary" @click="$refs.createProductModal.showModal()">建立新的產品</button>
     </div>
     <table class="table mt-4">
       <thead>
@@ -265,6 +273,7 @@ export default {
           <th>產品名稱</th>
           <th width="120">原價</th>
           <th width="120">售價</th>
+          <th width="150">評價</th>
           <th width="100">是否啟用</th>
           <th width="120">編輯</th>
         </tr>
@@ -275,17 +284,24 @@ export default {
           <td>{{ product.title }}</td>
           <td class="text-start">{{ product.origin_price }}</td>
           <td class="text-start">{{ product.price }}</td>
+          <td class="text-start">
+            <StarRating
+              v-model:rating="product.rating"
+              :star-size="14"
+              :show-rating="false"
+              :rounded-corners="true"
+              :border-width="3"
+              :padding="2"
+              :read-only="true"
+            />
+          </td>
           <td>
             <span class="text-success" v-if="product.is_enabled">啟用</span>
             <span v-else>未啟用</span>
           </td>
           <td>
             <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-outline-primary btn-sm"
-                @click="openEditModal(product.id)"
-              >
+              <button type="button" class="btn btn-outline-primary btn-sm" @click="openEditModal(product.id)">
                 編輯
               </button>
               <button
@@ -303,16 +319,8 @@ export default {
   </div>
   <!-- Modal -->
   <CreateProductModal ref="createProductModal" @createNewData="updateProduct"> </CreateProductModal>
-  <EditProductModal
-    ref="editProductModal"
-    :editData="editData"
-    @confirmEditData="updateProduct"
-  ></EditProductModal>
-  <DelProductModal
-    ref="delProductModal"
-    :delData="deleteData"
-    @confirmDeleteData="deleteProduct"
-  ></DelProductModal>
+  <EditProductModal ref="editProductModal" :editData="editData" @confirmEditData="updateProduct"></EditProductModal>
+  <DelProductModal ref="delProductModal" :delData="deleteData" @confirmDeleteData="deleteProduct"></DelProductModal>
 
   <!-- Modal -->
 </template>

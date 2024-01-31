@@ -4,7 +4,8 @@ import axios from 'axios'
 export const useUserStore = defineStore('user', {
   state: () => ({
     userLoggedIn: false,
-    isLoading: true
+    isLoading: true,
+    errorMessage: '',
   }),
   actions: {
     async authenticate(myToken) {
@@ -17,16 +18,17 @@ export const useUserStore = defineStore('user', {
           this.isLoading = false
         }
       } catch (error) {
-        const { success, message } = error.response.data
+        console.dir('error.response => ', error.response)
+        const { message } = error.response.data
         const { status, statusText } = error.response.request
         this.isLoading = false
-        alert(`${status} ${statusText} ${message}`);
-
+        this.errorMessage = `${status} ${statusText} ${message}`
       }
     },
     signOut() {
       this.userLoggedIn = false
       document.cookie = 'myToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      this.errorMessage = ''
     },
   }
 })
