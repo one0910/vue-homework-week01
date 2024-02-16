@@ -30,6 +30,7 @@ export default {
         let response = await this.$http.post(`${api}/admin/signin`, values);
         const { message, token, expired } = response.data;
         document.cookie = `myToken=${token}; expires=${new Date(expired)};`;
+        this.$http.defaults.headers.common['Authorization'] = token;
         this.userLoggedIn = true;
         alert(message);
         this.enableLoading = false;
