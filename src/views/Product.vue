@@ -1,80 +1,61 @@
 <script>
 import ProductDetail from '@/components/ProductDetail.vue';
 import { useUserStore } from '@/stores/user';
-import { mapState } from 'pinia';
+import { mapState, mapActions } from 'pinia';
+import { useCartStore } from '@/stores/cart';
+import Cart from '@/components/Cart.vue';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/css/index.css';
+
 export default {
   name: 'ProductPage',
   data() {
     return {
       temp: {},
-      products: [
-        {
-          category: '甜甜圈',
-          content: '尺寸：14x14cm',
-          description: '濃郁的草莓風味，中心填入滑順不膩口的卡士達內餡，帶來滿滿幸福感！',
-          id: '-L9tH8jxVb2Ka_DYPwng',
-          is_enabled: 1,
-          origin_price: 150,
-          price: 99,
-          title: '草莓莓果夾心圈',
-          unit: '個',
-          num: 10,
-          imageUrl:
-            'https://images.unsplash.com/photo-1583182332473-b31ba08929c8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NzR8fGRvbnV0fGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60',
-          imagesUrl: [
-            'https://images.unsplash.com/photo-1626094309830-abbb0c99da4a?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2832&q=80',
-            'https://images.unsplash.com/photo-1559656914-a30970c1affd?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTY0fHxkb251dHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60',
-          ],
-        },
-        {
-          category: '蛋糕',
-          content: '尺寸：6寸',
-          description: '蜜蜂蜜蛋糕，夾層夾上酸酸甜甜的檸檬餡，清爽可口的滋味讓人口水直流！',
-          id: '-McJ-VvcwfN1_Ye_NtVA',
-          is_enabled: 16,
-          origin_price: 1000,
-          price: 900,
-          title: '蜂蜜檸檬蛋糕',
-          unit: '個',
-          num: 1,
-          imageUrl:
-            'https://images.unsplash.com/photo-1627834377411-8da5f4f09de8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1001&q=80',
-          imagesUrl: [
-            'https://images.unsplash.com/photo-1618888007540-2bdead974bbb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=987&q=80',
-          ],
-        },
-        {
-          category: '蛋糕',
-          content: '尺寸：6寸',
-          description: '法式煎薄餅加上濃郁可可醬，呈現經典的美味及口感。',
-          id: '-McJ-VyqaFlLzUMmpPpm',
-          is_enabled: 1,
-          origin_price: 700,
-          price: 600,
-          title: '暗黑千層',
-          unit: '個',
-          num: 15,
-          imageUrl:
-            'https://images.unsplash.com/photo-1505253149613-112d21d9f6a9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDZ8fGNha2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60',
-          imagesUrl: [
-            'https://images.unsplash.com/flagged/photo-1557234985-425e10c9d7f1?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTA5fHxjYWtlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60',
-            'https://images.unsplash.com/photo-1540337706094-da10342c93d8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGNha2V8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60',
-          ],
-        },
-      ],
-      failMessage: '',
+      selectProduct: {},
+      products: [],
+      isLoadding: false,
     };
   },
   components: {
     ProductDetail,
+    Cart,
+    Loading,
   },
   computed: {
     ...mapState(useUserStore, ['errorMessage']),
+    loadingHeigh() {
+      if (this.isLoadding) {
+        return {
+          height: `100px`,
+        };
+      } else {
+        return {
+          height: `inherit`,
+        };
+      }
+    },
   },
   methods: {
+    async getProducts() {
+      this.isLoadding = true;
+      try {
+        const url = `${import.meta.env.VITE_API_URL}`;
+        const response = await this.$http.get(`${url}/products/all`);
+        this.products = response.data.products;
+        this.isLoadding = false;
+      } catch (error) {
+        console.error('error => ', error);
+        this.isLoadding = false;
+      }
+    },
+    ...mapActions(useCartStore, ['addToCart']),
     handDetial(product) {
       this.temp = { ...product };
     },
+  },
+  mounted() {
+    this.getProducts();
   },
 };
 </script>
@@ -91,31 +72,35 @@ export default {
         <table class="table table-hover mt-4">
           <thead>
             <tr>
-              <th width="150">產品名稱</th>
-              <th width="120">原價</th>
-              <th width="120">售價</th>
-              <th width="150">是否啟用</th>
-              <th width="120">查看細節</th>
+              <th width="170">產品名稱</th>
+              <th width="90">原價</th>
+              <th width="90">售價</th>
+              <th width="170">加到購物車</th>
+              <th width="100" style="text-align: center">數量</th>
+              <th width="130">查看細節</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="vl-parent" :style="loadingHeigh">
             <template v-for="product in products" :key="product.id">
               <tr>
-                <td width="150">{{ product.title }}</td>
-                <td width="120">{{ product.origin_price }}</td>
-                <td width="120">{{ product.price }}</td>
-                <td width="150">
-                  <span class="text-success" v-if="product.is_enabled">啟用</span>
-                  <span v-else>未啟用</span>
-                </td>
-                <td width="120">
+                <td width="170">{{ product.title }}</td>
+                <td width="90">{{ product.origin_price }}</td>
+                <td width="90">{{ product.price }}</td>
+                <Cart :prodcut="product" />
+                <td width="130">
                   <button type="button" class="btn btn-primary" @click="handDetial(product)">查看細節</button>
                 </td>
               </tr>
             </template>
+            <loading
+              v-model:active="isLoadding"
+              :can-cancel="true"
+              :color="'blue'"
+              :is-full-page="false"
+              :loader="`dots`"
+            />
           </tbody>
         </table>
-        <p>目前有 <span>{{}}</span> 項產品</p>
       </div>
       <div class="col-md-6">
         <h2>單一產品細節</h2>

@@ -1,5 +1,6 @@
 <script>
 import { useUserStore } from '@/stores/user';
+import { useCartStore } from '@/stores/cart';
 import { mapStores, mapState } from 'pinia';
 import Loading from './Loading.vue';
 
@@ -11,6 +12,7 @@ export default {
   computed: {
     ...mapStores(useUserStore),
     ...mapState(useUserStore, ['userLoggedIn', 'isLoading']),
+    ...mapState(useCartStore, ['cartOder']),
   },
   methods: {
     handleLogin() {
@@ -69,11 +71,11 @@ export default {
             </router-link>
           </li>
         </ul>
-        <!-- <a href="#" @click.prevent="handleLogin" v-show="!$route.meta.isLoginPage">
-          {{ `${userLoggedIn ? '登出' : '登入'}` }}
-        </a>
-        <a href="#" @click.prevent="$router.push('/product_manage')">產品管理</a> -->
       </div>
+      <router-link class="navbar-brand position-relative" href="#" :to="{ name: 'cart' }">
+        <span class="cartNumber" v-show="cartOder.length > 0">{{ cartOder.length }}</span>
+        <i class="bi bi-cart"> </i>
+      </router-link>
     </div>
   </nav>
 </template>

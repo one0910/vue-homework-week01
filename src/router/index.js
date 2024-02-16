@@ -1,7 +1,8 @@
 import LogInVue from '@/views/LogIn.vue'
 import ProductVue from '@/views/Product.vue'
 import ProductManageVue from '@/views/ProductManage.vue'
-import { createRouter, createWebHistory } from 'vue-router'
+import CartVue from '@/views/Cart.vue'
+import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 const routes = [
@@ -28,6 +29,11 @@ const routes = [
     }
   },
   {
+    name: 'cart',
+    path: '/cart',
+    component: CartVue,
+  },
+  {
     name: 'login',
     path: '/login',
     component: LogInVue,
@@ -43,7 +49,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: routes,
   linkExactActiveClass: 'activeLink'
 })

@@ -27,7 +27,9 @@ export const useUserStore = defineStore('user', {
     },
     signOut() {
       this.userLoggedIn = false
-      const cookieString = (import.meta.env.MODE === 'development') ? `myToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;` : `myToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;SameSite=None;Secure`
+      const cookieString = (import.meta.env.MODE === 'development') ? `myToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;` : `myToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/vue-homework-week01;SameSite=None;Secure;`
+
+      console.log('cookieString => ', cookieString)
       document.cookie = cookieString
       this.errorMessage = ''
     },
