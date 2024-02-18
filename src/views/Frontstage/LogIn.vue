@@ -34,7 +34,11 @@ export default {
         this.userLoggedIn = true;
         alert(message);
         this.enableLoading = false;
-        this.$router.push('/');
+        if (!this.$route.redirectedFrom) {
+          this.$router.push('/');
+        } else if (this.$route.redirectedFrom.name === 'productManage') {
+          this.$router.push({ name: 'productManage' });
+        }
       } catch (error) {
         const { message } = error.response.data;
         this.enableLoading = false;

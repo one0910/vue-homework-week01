@@ -6,6 +6,7 @@ import { useCartStore } from '@/stores/cart';
 import Cart from '@/components/Cart.vue';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
+const url = `${import.meta.env.VITE_API_URL}`;
 
 export default {
   name: 'ProductPage',
@@ -40,7 +41,6 @@ export default {
     async getProducts() {
       this.isLoadding = true;
       try {
-        const url = `${import.meta.env.VITE_API_URL}`;
         const response = await this.$http.get(`${url}/products/all`);
         this.products = response.data.products;
         this.isLoadding = false;
@@ -56,6 +56,7 @@ export default {
   },
   mounted() {
     this.getProducts();
+    console.log('this => ', this);
   },
 };
 </script>

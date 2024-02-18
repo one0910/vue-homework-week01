@@ -61,14 +61,7 @@ export default {
             </a>
           </li>
           <li class="nav-item">
-            <router-link
-              v-show="userLoggedIn"
-              href="#"
-              class="nav-link"
-              @click.prevent="$router.push('/product_manage')"
-              :to="{ name: 'productManage' }"
-              >產品管理
-            </router-link>
+            <router-link href="#" class="nav-link" :to="{ name: 'productManage' }">後台管理 </router-link>
           </li>
         </ul>
       </div>
