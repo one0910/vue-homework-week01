@@ -2,6 +2,7 @@
 import bootstrap from 'bootstrap/dist/js/bootstrap.js';
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
+import Swal from 'sweetalert2';
 const url = `${import.meta.env.VITE_API_URL}`;
 export default {
   data() {
@@ -41,9 +42,14 @@ export default {
         this.$emit('compeleteOrder', true);
         this.isLoadding = false;
         this.hideModal();
-        alert('訂購完成');
+        Swal.fire({
+          title: '訂購完成!',
+          icon: 'success',
+        });
+        // alert('訂購完成');
       } catch (error) {
-        console.error('error => ', error);
+        // console.error('error => ', error.response.data.message);
+        alert(error.response.data.message);
         this.isLoadding = false;
       }
     },
