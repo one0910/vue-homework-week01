@@ -179,7 +179,7 @@ export default {
                 @change="numChange(index, item.id)"
                 class="me-2"
               />
-              <img src="../assets/loading.svg" width="26" alt="loading" v-if="item.disabled" />
+              <img src="../../assets/loading.svg" width="26" alt="loading" v-if="item.disabled" />
             </td>
             <td>{{ item['total'] }}</td>
             <td scope="col" class="text-center">
