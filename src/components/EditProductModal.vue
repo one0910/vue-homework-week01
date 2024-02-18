@@ -2,6 +2,7 @@
 import bootstrap from 'bootstrap/dist/js/bootstrap.js';
 import StarRating from 'vue-star-rating';
 import Loading from './Loading.vue';
+import Swal from 'sweetalert2';
 export default {
   data() {
     return {
@@ -32,7 +33,10 @@ export default {
             ...this.$props.editData,
           },
         });
-        alert(`${response.data.message}`);
+        Swal.fire({
+          title: `${response.data.message}`,
+          icon: 'success',
+        });
         this.isLoading = false;
       } catch (error) {
         alert(`${error.response.data.message}`);

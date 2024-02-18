@@ -1,49 +1,56 @@
-import LogInVue from '@/views/LogIn.vue'
-import ProductVue from '@/views/Product.vue'
-import ProductManageVue from '@/views/ProductManage.vue'
-import CartVue from '@/views/Cart.vue'
+import LogInVue from '@/views/Frontstage/LogIn.vue'
+import ProductVue from '@/views/Frontstage/Product.vue'
+import ProductManageVue from '@/views/Backstage/ProductManage.vue'
+import CartVue from '@/views/Frontstage/Cart.vue'
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import BackstageHomeVue from '@/views/Backstage/BackstageHome.vue'
+import FrontstageHomeVue from '@/views/Frontstage/FrontstageHome.vue'
 
 const routes = [
   {
-    name: 'product',
+    name: 'front-stage',
     path: '/',
-    component: ProductVue,
-    // beforeEnter: async (to, from, next) => {
-    //   const store = useUserStore()
-    //   console.log('store.userLoggedIn => ', store.userLoggedIn)
-    //   if (store.userLoggedIn) {
-    //     next()
-    //   } else {
-    //     next({ name: "login" })
-    //   }
-    // },
+    component: FrontstageHomeVue,
+    children: [
+      {
+        name: 'product',
+        path: '/',
+        component: ProductVue,
+      },
+      {
+        name: 'login',
+        path: 'login',
+        component: LogInVue,
+        meta: {
+          isLoginPage: true
+        }
+      },
+      {
+        name: 'cart',
+        path: 'cart',
+        component: CartVue,
+      },
+    ]
   },
   {
-    name: 'productManage',
-    path: '/product_manage',
-    component: ProductManageVue,
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    name: 'cart',
-    path: '/cart',
-    component: CartVue,
-  },
-  {
-    name: 'login',
-    path: '/login',
-    component: LogInVue,
-    meta: {
-      isLoginPage: true
-    }
+    name: "back-stage",
+    path: '/admin',
+    component: BackstageHomeVue,
+    children: [
+      {
+        name: 'productManage',
+        path: 'product_manage',
+        component: ProductManageVue,
+        meta: {
+          requiresAuth: true
+        }
+      },
+    ]
   },
   {
     path: '/:catchAll(.*)*',
-    redirect: { name: 'product' }
+    redirect: { path: '/' }
   }
 
 ]
@@ -61,7 +68,7 @@ router.beforeEach((to, form, next) => {
     if (store.userLoggedIn) {
       next()
     } else {
-      next({ path: '/', })
+      next({ name: 'login', })
     }
     return;
   } else {
