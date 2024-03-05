@@ -1,7 +1,7 @@
 <script>
 import bootstrap from 'bootstrap/dist/js/bootstrap.js';
 import StarRating from 'vue-star-rating';
-import Loading from './Loading.vue';
+import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
 export default {
   data() {

@@ -3,11 +3,13 @@ import { useUserStore } from '@/stores/user';
 import { useCartStore } from '@/stores/cart';
 import { mapStores, mapState } from 'pinia';
 import Loading from './Loading.vue';
+import ToastMessage from './ToastMessage.vue';
 
 export default {
   name: 'AppHeader',
   components: {
     Loading,
+    ToastMessage,
   },
   computed: {
     ...mapStores(useUserStore),
@@ -39,6 +41,7 @@ export default {
 
 <template>
   <Loading :isActive="isLoading" />
+  <ToastMessage />
   <!-- <nav class="navbar navbar-light bg-light border"> -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">

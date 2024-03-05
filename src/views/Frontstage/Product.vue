@@ -56,7 +56,6 @@ export default {
   },
   mounted() {
     this.getProducts();
-    console.log('this => ', this);
   },
 };
 </script>

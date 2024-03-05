@@ -6,6 +6,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import { useUserStore } from '@/stores/user'
 import BackstageHomeVue from '@/views/Backstage/BackstageHome.vue'
 import FrontstageHomeVue from '@/views/Frontstage/FrontstageHome.vue'
+import OrderManageVue from '@/views/Backstage/OrderManage.vue'
 
 const routes = [
   {
@@ -42,6 +43,30 @@ const routes = [
         name: 'productManage',
         path: 'product_manage',
         component: ProductManageVue,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        name: 'orderManage',
+        path: 'order_manage',
+        component: () => import(`@/views/Backstage/OrderManage.vue`),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        name: 'cuponManage',
+        path: 'cupon_manage',
+        component: () => import(`@/views/Backstage/CuponManage.vue`),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        name: 'postManage',
+        path: 'post_manage',
+        component: () => import(`@/views/Backstage/PostManage.vue`),
         meta: {
           requiresAuth: true
         }
