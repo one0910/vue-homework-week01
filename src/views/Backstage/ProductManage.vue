@@ -1,7 +1,7 @@
 <script>
-import CreateProductModal from '@/components/CreateProductModal.vue';
-import DelProductModal from '@/components/DelProductModal.vue';
-import EditProductModal from '@/components/EditProductModal.vue';
+import CreateProductModal from '@/components/modal/CreateProductModal.vue';
+import DelProductModal from '@/components/modal/DelProductModal.vue';
+import EditProductModal from '@/components/modal/EditProductModal.vue';
 import StarRating from 'vue-star-rating';
 const url = `${import.meta.env.VITE_API_URL}`;
 export default {
@@ -103,67 +103,65 @@ export default {
 </script>
 
 <template>
-  <div class="container">
-    <div class="text-end mt-4">
-      <button class="btn btn-primary" @click="$refs.createProductModal.showModal()">建立新的產品</button>
-    </div>
-    <table class="table mt-4">
-      <thead>
-        <tr>
-          <th width="120">分類</th>
-          <th>產品名稱</th>
-          <th width="120">原價</th>
-          <th width="120">售價</th>
-          <th width="150">評價</th>
-          <th width="100">是否啟用</th>
-          <th width="120">編輯</th>
-        </tr>
-      </thead>
-      <tbody class="vl-parent" :style="loadingHeigh">
-        <LoadingGlobal
-          v-model:active="isLoadding"
-          :can-cancel="true"
-          :color="'blue'"
-          :is-full-page="false"
-          :loader="`dots`"
-        ></LoadingGlobal>
-        <tr v-for="(product, index) in reversedProducts" :key="product.id">
-          <td>{{ product.category }}</td>
-          <td>{{ product.title }}</td>
-          <td class="text-start">{{ product.origin_price }}</td>
-          <td class="text-start">{{ product.price }}</td>
-          <td class="text-start">
-            <StarRating
-              v-model:rating="product.rating"
-              :star-size="14"
-              :show-rating="false"
-              :rounded-corners="true"
-              :border-width="3"
-              :padding="2"
-              :read-only="true"
-            />
-          </td>
-          <td>
-            <span class="text-success" v-if="product.is_enabled">啟用</span>
-            <span v-else>未啟用</span>
-          </td>
-          <td>
-            <div class="btn-group">
-              <button type="button" class="btn btn-outline-primary btn-sm" @click="openEditModal(product.id)">
-                編輯
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger btn-sm"
-                @click="openDelModal(product.id, product.title)"
-              >
-                刪除
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th width="120">分類</th>
+        <th>產品名稱</th>
+        <th width="120">原價</th>
+        <th width="120">售價</th>
+        <th width="150">評價</th>
+        <th width="100">是否啟用</th>
+        <th width="120">編輯</th>
+      </tr>
+    </thead>
+    <tbody class="vl-parent" :style="loadingHeigh">
+      <LoadingGlobal
+        v-model:active="isLoadding"
+        :can-cancel="true"
+        :color="'blue'"
+        :is-full-page="false"
+        :loader="`dots`"
+      ></LoadingGlobal>
+      <tr v-for="(product, index) in reversedProducts" :key="product.id">
+        <td>{{ product.category }}</td>
+        <td>{{ product.title }}</td>
+        <td class="text-start">{{ product.origin_price }}</td>
+        <td class="text-start">{{ product.price }}</td>
+        <td class="text-start">
+          <StarRating
+            v-model:rating="product.rating"
+            :star-size="14"
+            :show-rating="false"
+            :rounded-corners="true"
+            :border-width="3"
+            :padding="2"
+            :read-only="true"
+          />
+        </td>
+        <td>
+          <span class="text-success" v-if="product.is_enabled">啟用</span>
+          <span v-else>未啟用</span>
+        </td>
+        <td class="py-1">
+          <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary btn-sm" @click="openEditModal(product.id)">
+              編輯
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger btn-sm"
+              @click="openDelModal(product.id, product.title)"
+            >
+              刪除
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-end mt-4">
+    <button class="btn btn-primary" @click="$refs.createProductModal.showModal()">建立新的產品</button>
   </div>
   <!-- Modal -->
   <CreateProductModal ref="createProductModal" @createNewData="updateProduct"> </CreateProductModal>

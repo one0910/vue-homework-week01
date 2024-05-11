@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/css/index.css';
+import { currency, date } from './utilities/filter'
 
 import App from './App.vue'
 import router from './router'
@@ -15,6 +16,11 @@ import VueAxios from 'vue-axios'
 
 
 const app = createApp(App)
+app.config.globalProperties.$filters = {
+  date,
+  currency,
+};
+
 
 app.use(createPinia())
 app.use(router)

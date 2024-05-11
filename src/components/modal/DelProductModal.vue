@@ -1,29 +1,29 @@
 <script>
-import bootstrap from 'bootstrap/dist/js/bootstrap.js'
+import bootstrap from 'bootstrap/dist/js/bootstrap.js';
 export default {
   data() {
     return {
-      modal: {}
-    }
+      modal: {},
+    };
   },
   props: ['delData'],
   emits: ['confirmDeleteData'],
   methods: {
     showModal() {
-      this.modal.show()
+      this.modal.show();
     },
     hideModal() {
-      this.modal.hide()
+      this.modal.hide();
     },
     confirmDelete() {
-      this.$emit('confirmDeleteData', this.$props.delData)
-      this.hideModal()
-    }
+      this.$emit('confirmDeleteData', this.$props.delData);
+      this.hideModal();
+    },
   },
   mounted() {
-    this.modal = new bootstrap.Modal(this.$refs.delProductModal)
-  }
-}
+    this.modal = new bootstrap.Modal(this.$refs.delProductModal);
+  },
+};
 </script>
 
 <template>
@@ -41,21 +41,16 @@ export default {
           <h5 id="delProductModalLabel" class="modal-title">
             <span>刪除產品</span>
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           是否刪除
-          <strong class="text-danger">{{ $props.delData.title }}</strong> (刪除後將無法恢復)。
+          <strong class="text-danger" v-if="$props.delData.title">{{ $props.delData.title }}</strong>
+          <strong v-else>此訂單記錄</strong>
+          (刪除後將無法恢復)。
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-            取消
-          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
           <button type="button" class="btn btn-danger" @click="confirmDelete()">確認刪除</button>
         </div>
       </div>
